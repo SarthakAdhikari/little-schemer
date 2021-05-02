@@ -1,0 +1,220 @@
+* The little schemer
+:PROPERTIES:
+:header-args: :results output :exports both :session *scheme*
+:END:
+
+I am currently reading "The Little Schemer" by Daniel P. Friedman and Matthias
+Felleisen. I have found it to be the best intro to Lisp that I have come across.
+Earlier, I tried "An Introduction to Programming in Emacs Lisp" but it was
+taking too long to explain concepts and it got pretty boring pretty quick.
+Things are different with The Little Schemer because its packed with exercises
+which requires leveraging the power of clever recursions.
+
+** Chapter 1
+This chapter does not have any exercises.
+
+** Chapter 2
+
+We begin by defining `atom?` and `lat?`.
+
+`atom?` is a function which takes a symoblic expression as an input and returns
+true or false based on whether `x` is an atom.
+Think of it as the smallest possible unit with the exception that it cannot be a list.
+
+
+** atom?
+#+begin_src scheme
+(define atom?
+  (lambda (x)
+    (and
+         (not (pair? x))
+         (not (null? x))
+    )))
+(display (atom? '(a s)))
+(newline)
+(display (atom? 'a))
+(newline)
+(display (atom? 5))
+#+end_src
+
+#+RESULTS:
+: #f
+: #t
+: #t
+
+** lat?
+`lat?` is a function which takes a list as an input and returns
+2 if `x` is a nested list else returns 1.
+#+begin_src scheme
+
+(define lat?
+  (lambda (l)
+    (cond
+     ((null? l) 1)
+     ((atom? (car l)) (lat? (cdr l)))
+     (else 2)
+     )
+    ))
+
+(display (lat? '(a (sda))))
+(newline)
+(display (lat? '(1 2 3)))
+#+end_src
+
+#+RESULTS:
+: 2
+: 1
+
+*** member?
+
+Member is a function that returns false
+if we cannot find a match until the last iteration
+#+begin_src scheme
+(define member?
+  (lambda (a lat)
+    (cond
+     ((null? lat) #f)
+     (else
+      (or (eq? (car lat) a)
+          (member? a (cdr lat)))
+      )
+     )))
+
+(display (member? 'a '(a b)))
+(newline)
+(display (member? 'a '(1 2)))
+#+end_src
+
+#+RESULTS:
+: #t
+: #f
+
+** Chapter 3
+
+*** rember?
+
+
+Rember removes the first occurence of atom `a' in the list `lat`.
+#+begin_src scheme
+(define rember
+  (lambda (a lat)
+    (cond
+     ((null? lat) '())
+     (else(cond
+           ((eq? a (car lat)) (cdr lat))
+           (else (cons (car lat)
+                       (rember a
+                               (cdr lat)) )))))))
+
+(display (rember 'b '(a b c b)))
+#+end_src
+
+#+RESULTS:
+: (a c b)
+
+*** insertR
+insertR takes three args `new', `old' and a list `lat' and appends `new' after
+the first occurence of `old' in the list `lat'
+
+#+begin_src scheme
+(define insertR
+  (lambda (new old lat)
+    (cond
+     ((null? lat ) '())
+     ((eq? old (car lat)) (cons old (cons new (cdr lat))))
+     (else
+      (cons (car lat) (insertR new old (cdr lat)))
+      )
+      )))
+
+(display (insertR 'new 'old '(sad old)))
+#+end_src
+
+#+RESULTS:
+: (sad old new)
+
+
+*** insertL
+insertL takes three args `new', `old' and a list `lat' and appends `new' before
+the first occurence of `old' in the list `lat'.
+
+#+begin_src scheme
+(define insertL
+  (lambda (new old lat)
+    (cond
+     ((null? lat ) '())
+     ((eq? old (car lat)) (cons new lat))
+     (else
+      (cons (car lat) (insertL new old (cdr lat)))
+      )
+     )))
+
+(display (insertL 'new 'old '(sad old)))
+#+end_src
+
+#+RESULTS:
+: (sad new old)
+
+*** subst
+
+subst takes 3 arguments `new', `old' and a list `lat' and substitutes the first
+occurence of `old' with `new'
+#+begin_src scheme
+(define subst
+  (lambda (new old lat)
+    (cond
+     ((null? lat) '())
+     ((eq? old (car lat))(cons new (cdr lat)))
+      (else
+       (cons (car lat) (subst new old (cdr lat)))
+       )
+      )
+     ))
+(display (subst 'apple 'banana '(bananana juice)))
+#+end_src
+
+#+RESULTS:
+: (bananana juice)
+
+*** subst2
+
+subst takes 4 arguments `new', `old1`, `old2` and a list `lat` and substitutes the first
+occurence of `old1' or `old2` with `new'.
+
+#+begin_src scheme
+(define subst2
+  (lambda (new old1 old2 lat)
+    (cond
+     ((null? lat) '())
+     ((member? new '(old1 old2))(cons new (cdr lat)))
+      (else
+       (cons (car lat) (subst2 new old1 old2 (cdr lat)))
+       )
+      )
+     ))
+(display (subst2 'apple 'banana 'vanilla '(vanilla banana juice)))
+#+end_src
+
+#+RESULTS:
+: (vanilla banana juice)
+
+** multirember
+
+Rember removes all the occurence of atom `a' in the list `lat`.
+#+begin_src scheme
+
+(define multirember
+  (lambda (a lat)
+    (cond
+     ((null? lat) '())
+     (else(cond
+           ((eq? a (car lat)) (multirember a (cdr lat)))
+           (else (cons (car lat)
+                       (multirember a
+                               (cdr lat)) )))))))
+
+(display (multirember 'b '(a b c b)))
+#+end_src
+
+#+RESULTS:
+: (a c)

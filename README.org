@@ -1,6 +1,6 @@
 * The little schemer
 :PROPERTIES:
-:header-args: :results output :exports both :session *scheme*
+:header-args_ALL: :results output :exports both :session *scheme*
 :END:
 
 I am currently reading "The Little Schemer" by Daniel P. Friedman and Matthias

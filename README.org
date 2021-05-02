@@ -23,7 +23,7 @@ Think of it as the smallest possible unit with the exception that it cannot be a
 
 
 ** atom?
-#+begin_src scheme :exports both
+#+begin_src scheme :exports both :results output
 (define atom?
   (lambda (x)
     (and

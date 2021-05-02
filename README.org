@@ -1,7 +1,6 @@
+#+PROPERTY: header-args :results output :exports both :session *scheme*
+
 * The little schemer
-:PROPERTIES:
-:header-args_ALL: :results output :exports both :session *scheme*
-:END:
 
 I am currently reading "The Little Schemer" by Daniel P. Friedman and Matthias
 Felleisen. I have found it to be the best intro to Lisp that I have come across.
@@ -23,7 +22,7 @@ Think of it as the smallest possible unit with the exception that it cannot be a
 
 
 ** atom?
-#+begin_src scheme :exports both :results output
+#+begin_src scheme
 (define atom?
   (lambda (x)
     (and

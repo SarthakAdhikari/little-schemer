@@ -219,7 +219,7 @@ multirember removes all the occurence of atom `a' in the list `lat`.
 
 ** multiinsertR
 
-insertR takes three args `new', `old' and a list `lat' and appends `new' after
+multiinsertR takes three args `new', `old' and a list `lat' and appends `new' after
 the all occurences of `old' in the list `lat'.
 
 #+begin_src scheme
@@ -228,15 +228,69 @@ the all occurences of `old' in the list `lat'.
     (cond
      ((null? lat) '())
      ((eq? old (car lat)) (cons
-                           (cons old new)
+                           old
+                           (cons
+                            new
                            (multiinsertR new old (cdr lat))
+                            )
                            ))
      (else
-      (multiinsertR new old (cdr lat)))
+      (cons (car lat) (multiinsertR new old (cdr lat)))
+      )
      )))
 
 (display (multiinsertR 'banana 'apple '(apple grows with apple)))
 #+end_src
 
 #+RESULTS:
-: ((apple . banana) (apple . banana))
+: (apple banana grows with apple banana)
+
+** multiinsertL
+
+multiinsertL takes three args `new', `old' and a list `lat' and appends `new' before
+all occurences of `old' in the list `lat'.
+
+#+begin_src scheme
+(define multiinsertL
+  (lambda (new old lat)
+    (cond
+     ((null? lat) '())
+     ((eq? old (car lat)) (cons
+                           new
+                           (cons
+                            old
+                           (multiinsertL new old (cdr lat))
+                            )
+                           ))
+     (else
+      (cons (car lat) (multiinsertL new old (cdr lat)))
+      )
+     )))
+
+(display (multiinsertL 'fried 'fish '(chips and fish or fish and fried)))
+#+end_src
+
+#+RESULTS:
+: (chips and fried fish or fried fish and fried)
+
+
+*** multisubst
+
+multisubst takes 3 arguments `new', `old' and a list `lat' and substitutes all
+occurence of `old' with `new'.
+#+begin_src scheme
+(define subst
+  (lambda (new old lat)
+    (cond
+     ((null? lat) '())
+     ((eq? old (car lat))(cons new (subst new old (cdr lat))))
+      (else
+       (cons (car lat) (subst new old (cdr lat)))
+       )
+      )
+     ))
+(display (subst 'apple 'banana '(banana juice banana shake)))
+#+end_src
+
+#+RESULTS:
+: (apple juice apple shake)

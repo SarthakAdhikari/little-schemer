@@ -23,7 +23,7 @@ Think of it as the smallest possible unit with the exception that it cannot be a
 
 
 ** atom?
-#+begin_src scheme
+#+begin_src scheme :exports both
 (define atom?
   (lambda (x)
     (and
@@ -200,7 +200,7 @@ occurence of `old1' or `old2` with `new'.
 
 ** multirember
 
-Rember removes all the occurence of atom `a' in the list `lat`.
+multirember removes all the occurence of atom `a' in the list `lat`.
 #+begin_src scheme
 
 (define multirember

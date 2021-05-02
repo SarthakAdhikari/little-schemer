@@ -1,6 +1,6 @@
 #+PROPERTY: header-args :results output :exports both :session *scheme*
 
-* The little schemer
+* The Little Schemer
 
 I am currently reading "The Little Schemer" by Daniel P. Friedman and Matthias
 Felleisen. I have found it to be the best intro to Lisp that I have come across.
@@ -93,7 +93,7 @@ if we cannot find a match until the last iteration
 *** rember?
 
 
-Rember removes the first occurence of atom `a' in the list `lat`.
+rember removes the first occurence of atom `a' in the list `lat`.
 #+begin_src scheme
 (define rember
   (lambda (a lat)
@@ -201,7 +201,6 @@ occurence of `old1' or `old2` with `new'.
 
 multirember removes all the occurence of atom `a' in the list `lat`.
 #+begin_src scheme
-
 (define multirember
   (lambda (a lat)
     (cond
@@ -217,3 +216,27 @@ multirember removes all the occurence of atom `a' in the list `lat`.
 
 #+RESULTS:
 : (a c)
+
+** multiinsertR
+
+insertR takes three args `new', `old' and a list `lat' and appends `new' after
+the all occurences of `old' in the list `lat'.
+
+#+begin_src scheme
+(define multiinsertR
+  (lambda (new old lat)
+    (cond
+     ((null? lat) '())
+     ((eq? old (car lat)) (cons
+                           (cons old new)
+                           (multiinsertR new old (cdr lat))
+                           ))
+     (else
+      (multiinsertR new old (cdr lat)))
+     )))
+
+(display (multiinsertR 'banana 'apple '(apple grows with apple)))
+#+end_src
+
+#+RESULTS:
+: ((apple . banana) (apple . banana))

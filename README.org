@@ -294,3 +294,68 @@ occurence of `old' with `new'.
 
 #+RESULTS:
 : (apple juice apple shake)
+
+** Chapter 4
+
+*** add1
+
+Adds 1 to the input.
+#+begin_src scheme
+(define add1
+  (lambda (n)
+    (+ n 1)))
+(display (add1 5))
+#+end_src
+
+#+RESULTS:
+: 6
+
+*** sub1
+
+Substracts 1 from the input.
+
+#+begin_src scheme
+(define sub1
+       (lambda (n)
+         (- n 1)))
+(display (sub1 6))
+#+end_src
+
+#+RESULTS:
+: 5
+
+*** o+
+
+o+ takes two parameters `m` and `n` and returns their sum.
+#+begin_src scheme
+(define o+
+  (lambda (m n)
+    (cond
+     ((zero? m) n)
+     (else
+      (o+ (sub1 m) (add1 n)))
+     )
+    )
+  )
+(display (o+ 5 100))
+#+end_src
+
+#+RESULTS:
+: 105
+
+*** o-
+
+o- takes two parameters `m` and `n` and returns their difference.
+
+#+begin_src scheme
+(define o-
+  (lambda (m n)
+    (cond
+     ((zero? m) n)
+    (else
+     (o- (sub1 n) (sub1 m))))))
+(display (o- 14 3))
+#+end_src
+
+#+RESULTS:
+: 11
